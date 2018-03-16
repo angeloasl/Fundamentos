@@ -1,0 +1,57 @@
+#uma função que verifica se um grafo direcionado é conectado
+
+from __future__ import print_function, division
+
+%matplotlib inline
+
+import warnings
+warnings.filterwarnings('ignore')
+
+import matplotlib.pyplot as plt
+
+import networkx as nx
+import numpy as np
+
+# colors from our friends at http://colorbrewer2.org
+COLORS = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462',
+          '#b3de69','#fccde5','#d9d9d9','#bc80bd','#ccebc5','#ffed6f']
+
+from thinkstats2 import RandomSeed
+RandomSeed(17)
+
+def all_pairs(nodes):
+    for i, u in enumerate(nodes):
+        for j, v in enumerate(nodes):
+            if i < j:
+                yield u, v
+
+def make_complete_graph(n):
+    G2 = nx.DiGraph()
+    nodes = range(n)
+    G2.add_nodes_from(nodes)
+    G2.add_edges_from(all_pairs(nodes))
+    return G2
+
+complete = make_complete_graph(5)
+len(complete.nodes())
+
+complete.neighbors(0)
+
+def reachable_nodes(G2, start):
+    seen = set()
+    stack = [start]
+    while stack:
+        node = stack.pop()
+        if node not in seen:
+            seen.add(node)
+            stack.extend(G2.neighbors(node))
+    return seen
+
+reachable_nodes(complete, 0)
+
+def is_connected(G2):
+    start = next(iter(G2.nodes)) #original code: next(G.nodes_iter())
+    reachable = reachable_nodes(G2, start)
+    return len(reachable) == len(G2)
+
+is_connected(complete)
