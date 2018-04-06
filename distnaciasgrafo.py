@@ -12,4 +12,4 @@ def meu_dijkstra(G, source):
                 seen.add(v)
                 nextlevel.update(G[v])
         nivel+=1
-return distancias
+    return distancias
